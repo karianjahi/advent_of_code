@@ -3,7 +3,6 @@ finding sleight keys
 """
 import utils
 from utils import use_tuples
-import pandas as pd
 
 
 class SleightKeys:
