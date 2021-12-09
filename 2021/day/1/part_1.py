@@ -1,6 +1,8 @@
 """
 Day 1: Sonar Sweep
 """
+from advent_of_code import utils
+import pandas as pd
 
 class SleightKeys:
     """
@@ -8,27 +10,41 @@ class SleightKeys:
     day one: count the number of times
     there is an increase in the depth
     """
-    def __init__(self, textfile):
+
+    def __init__(self, data):
         """
         Constructor class
-        :param depth_file: a file containing depth measurements
+        :param data: str: > text data
         """
         self.depth_increase_count = None
-        self.textfile = textfile
-
-
+        self.data = data
 
     def count_depth_increases(self):
         """
         count the number times the depth increases
         :return: int
         """
-        pass
+        depths = [int(value) for value in self.data.split("\n")]
+        count_increments = []
+        for index, depth in enumerate(depths):
+            if index != 0:
+                if depth > depths[index-1]:
+                    count_increments.append(True)
+                else:
+                    count_increments.append(False)
+            else:
+                count_increments.append(False)
+        # sl = pd.DataFrame({"dat": self.data.split("\n"), "inc": count_increments})
+        # print(sl)
+        return sum(count_increments)
+
+
+
+
+
 
 if __name__ == "__main__":
-    afile = "../../../data/day_1_example_data.csv"
-    obj = SleightKeys(afile)
-    print(obj.read_text_file())
-
-
+    text_data = utils.read_text_file("../../data/day_1_example_data.csv")
+    obj = SleightKeys(text_data)
+    print(obj.count_depth_increases())
 

@@ -1,10 +1,11 @@
 """
 Some utility functions
 """
-def read_text_file(self):
+
+def read_text_file(text_file):
     """
     Reading a text file
     :return: str
     """
-    with open(self.textfile, "r") as afile:
+    with open(text_file, "r") as afile:
         return afile.read()
