@@ -19,6 +19,8 @@ class SleightKeys:
         """
         self.depth_increase_count = None
         self.data = data.split("\n")
+        self.submarine_range = 0
+        self.submarine_depth = 0
 
     def get_running_windows(self, moving_window):
         """
@@ -43,6 +45,21 @@ class SleightKeys:
         moving_window_sum = [sum([float(i) for i in alist]) for alist in moving_window_list_of_list]
         return utils.count_increasing_quantity(moving_window_sum)
 
+    def move_submarine(self, command, steps):
+        """
+        :param command: str. command
+        :param steps: int. how many steps
+        We need to move the submarine either up, down, or forward
+        :return:
+        """
+        if command == "forward":
+            self.submarine_range += steps
+        if command == "down":
+            self.submarine_depth += steps
+        if command == "up":
+            self.submarine_depth -= steps
+
+
 
 if __name__ == "__main__":
     # Day 1: First part solution
@@ -54,3 +71,8 @@ if __name__ == "__main__":
     # text_data = utils.read_text_file("../../data/day1_example_data.csv")
     obj = SleightKeys(text_data)
     print(f'Day 1 part 2 answer: {obj.count_increasing_depths_by_window(moving_window=3)}')
+
+    # Day 2: First part solution:
+    text_data = 6
+    obj = SleightKeys(text_data)
+
