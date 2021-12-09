@@ -1,8 +1,6 @@
 """
 Some utility functions
 """
-
-
 def read_text_file(self):
     """
     Reading a text file
