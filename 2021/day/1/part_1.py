@@ -4,6 +4,7 @@ Day 1: Sonar Sweep
 from advent_of_code import utils
 import pandas as pd
 
+
 class SleightKeys:
     """
     we need to find slight keys:
@@ -17,34 +18,39 @@ class SleightKeys:
         :param data: str: > text data
         """
         self.depth_increase_count = None
-        self.data = data
+        self.data = data.split("\n")
 
-    def count_depth_increases(self):
+    def get_running_windows(self, moving_window):
         """
-        count the number times the depth increases
-        :return: int
+        moving_window: int > how many values per window?
+        :param moving_window: int
+        :return: list of lists with each containin moving_window values
         """
-        depths = [int(value) for value in self.data.split("\n")]
-        count_increments = []
-        for index, depth in enumerate(depths):
-            if index != 0:
-                if depth > depths[index-1]:
-                    count_increments.append(True)
-                else:
-                    count_increments.append(False)
-            else:
-                count_increments.append(False)
-        # sl = pd.DataFrame({"dat": self.data.split("\n"), "inc": count_increments})
-        # print(sl)
-        return sum(count_increments)
+        running_windows = []
+        for index, depth in enumerate(self.data):
+            if index < len(self.data) - (moving_window - 1):
+                window_indices = range(index, index + moving_window)
+                running_windows.append([self.data[i] for i in window_indices])
+        return running_windows
 
-
-
-
+    def count_increasing_depths_by_window(self, moving_window):
+        """
+        moving_window: int > how many values per window?
+        Calculating moving depth
+        :return: list of moving_window running sums
+        """
+        moving_window_list_of_list = self.get_running_windows(moving_window)
+        moving_window_sum = [sum([float(i) for i in alist]) for alist in moving_window_list_of_list]
+        return utils.count_increasing_quantity(moving_window_sum)
 
 
 if __name__ == "__main__":
-    text_data = utils.read_text_file("../../data/day_1_example_data.csv")
+    # Day 1: First part solution
+    text_data = utils.read_text_file("../../data/day1_data.csv")
     obj = SleightKeys(text_data)
-    print(obj.count_depth_increases())
+    print(f'Day 1 part 1 answer: {obj.count_increasing_depths_by_window(moving_window=1)}')
 
+    # Day 1: Second part solution
+    # text_data = utils.read_text_file("../../data/day1_example_data.csv")
+    obj = SleightKeys(text_data)
+    print(f'Day 1 part 2 answer: {obj.count_increasing_depths_by_window(moving_window=3)}')
