@@ -22,6 +22,7 @@ class SleightKeys:
         self.data = data.split("\n")
         self.submarine_range = 0
         self.submarine_depth = 0
+        self.submarine_aim = 0
 
     def get_running_windows(self, moving_window):
         """
@@ -55,10 +56,12 @@ class SleightKeys:
         """
         if command == "forward":
             self.submarine_range += steps
+            if self.submarine_aim != 0:
+                self.submarine_depth += self.submarine_aim * steps
         if command == "down":
-            self.submarine_depth += steps
+            self.submarine_aim += steps
         if command == "up":
-            self.submarine_depth -= steps
+            self.submarine_aim -= steps
 
     def get_commands_and_steps(self):
         """
@@ -72,9 +75,9 @@ class SleightKeys:
             commands_and_steps.append((alist[0], alist[1]))
         return commands_and_steps
 
-    def move_submarine(self):
+    def move_submarine_the_whole_hog(self):
         """
-        move submarine
+        move submarine after applying all steps
         :return: None
         """
         for my_tuple in self.get_commands_and_steps():
@@ -93,14 +96,29 @@ if __name__ == "__main__":
     print(f'Day 1 part 2 answer: {obj.count_increasing_depths_by_window(moving_window=3)}')
 
     # Day 2: First part solution:
-    text_data = utils.read_text_file("../../data/day2_example_data.csv")
+    text_data = utils.read_text_file("../../data/day2_data.csv")
     obj = SleightKeys(text_data)
-    obj.move_submarine()
+    obj.move_submarine_the_whole_hog()
     final_range = obj.submarine_range
     final_depth = obj.submarine_depth
     final_product = final_range * final_depth
     print("")
     print("Day 2 part 1 results")
+    print("------------------------------")
+    print(f'Final range: {final_range}\n'
+          f'Final depth: {final_depth}\n'
+          f'Final product: {final_product}')
+    
+    # Day 2: Second solution
+    text_data = utils.read_text_file("../../data/day2_data.csv")
+    obj = SleightKeys(text_data)
+    obj.move_submarine_the_whole_hog()
+    final_range = obj.submarine_range
+    final_depth = obj.submarine_depth
+    final_aim = obj.submarine_aim
+    final_product = final_range * final_depth
+    print("")
+    print("Day 2 part 2 results")
     print("------------------------------")
     print(f'Final range: {final_range}\n'
           f'Final depth: {final_depth}\n'
