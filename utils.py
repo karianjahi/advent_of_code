@@ -32,3 +32,17 @@ def count_increasing_quantity(alist):
     # sl = pd.DataFrame({"dat": alist, "inc": count_increments})
     # print(sl)
     return sum(count_increments)
+
+
+def use_tuples(func):
+    """
+    This is a decorator meant to change
+    a function that takes 2 arguments/attributes
+    so that it can take a list of tuples instead
+    :param func: A function that takes 2 attributes
+    :return:
+    """
+    def inner(list_of_tuples):
+        for my_tuple in list_of_tuples:
+            func(my_tuple[0], my_tuple[1])
+        return inner

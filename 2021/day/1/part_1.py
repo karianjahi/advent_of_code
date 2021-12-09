@@ -2,6 +2,7 @@
 Day 1: Sonar Sweep
 """
 from advent_of_code import utils
+from advent_of_code.utils import use_tuples
 import pandas as pd
 
 
@@ -45,7 +46,7 @@ class SleightKeys:
         moving_window_sum = [sum([float(i) for i in alist]) for alist in moving_window_list_of_list]
         return utils.count_increasing_quantity(moving_window_sum)
 
-    def move_submarine(self, command, steps):
+    def move_submarine_once(self, command, steps):
         """
         :param command: str. command
         :param steps: int. how many steps
@@ -59,6 +60,25 @@ class SleightKeys:
         if command == "up":
             self.submarine_depth -= steps
 
+    def get_commands_and_steps(self):
+        """
+        Get commands and steps from data
+        :return: list of tuples
+        """
+        commands_and_steps = []
+        for line in self.data:
+            alist = line.split()
+            alist[1] = int(alist[1])
+            commands_and_steps.append((alist[0], alist[1]))
+        return commands_and_steps
+
+    def move_submarine(self):
+        """
+        move submarine
+        :return: None
+        """
+        for my_tuple in self.get_commands_and_steps():
+            self.move_submarine_once(my_tuple[0], my_tuple[1])
 
 
 if __name__ == "__main__":
@@ -73,6 +93,16 @@ if __name__ == "__main__":
     print(f'Day 1 part 2 answer: {obj.count_increasing_depths_by_window(moving_window=3)}')
 
     # Day 2: First part solution:
-    text_data = 6
+    text_data = utils.read_text_file("../../data/day2_example_data.csv")
     obj = SleightKeys(text_data)
+    obj.move_submarine()
+    final_range = obj.submarine_range
+    final_depth = obj.submarine_depth
+    final_product = final_range * final_depth
+    print("")
+    print("Day 2 part 1 results")
+    print("------------------------------")
+    print(f'Final range: {final_range}\n'
+          f'Final depth: {final_depth}\n'
+          f'Final product: {final_product}')
 
