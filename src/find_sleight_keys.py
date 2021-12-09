@@ -1,8 +1,8 @@
 """
-Day 1: Sonar Sweep
+finding sleight keys
 """
-from advent_of_code import utils
-from advent_of_code.utils import use_tuples
+import utils
+from utils import use_tuples
 import pandas as pd
 
 
@@ -86,17 +86,17 @@ class SleightKeys:
 
 if __name__ == "__main__":
     # Day 1: First part solution
-    text_data = utils.read_text_file("../../data/day1_data.csv")
+    text_data = utils.read_text_file("../data/day1_data.csv")
     obj = SleightKeys(text_data)
     print(f'Day 1 part 1 answer: {obj.count_increasing_depths_by_window(moving_window=1)}')
 
     # Day 1: Second part solution
-    # text_data = utils.read_text_file("../../data/day1_example_data.csv")
+    # text_data = utils.read_text_file("../data/day1_example_data.csv")
     obj = SleightKeys(text_data)
     print(f'Day 1 part 2 answer: {obj.count_increasing_depths_by_window(moving_window=3)}')
 
     # Day 2: First part solution:
-    text_data = utils.read_text_file("../../data/day2_data.csv")
+    text_data = utils.read_text_file("../data/day2_data.csv")
     obj = SleightKeys(text_data)
     obj.move_submarine_the_whole_hog()
     final_range = obj.submarine_range
@@ -110,7 +110,7 @@ if __name__ == "__main__":
           f'Final product: {final_product}')
     
     # Day 2: Second solution
-    text_data = utils.read_text_file("../../data/day2_data.csv")
+    text_data = utils.read_text_file("../data/day2_data.csv")
     obj = SleightKeys(text_data)
     obj.move_submarine_the_whole_hog()
     final_range = obj.submarine_range
