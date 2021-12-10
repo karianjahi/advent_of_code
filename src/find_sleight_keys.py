@@ -156,7 +156,7 @@ class SleightKeys:
         else:
             return self.get_rating(df, is_oxygen=True, is_binary=False)
 
-    def get_epsilon_rating(self, is_binary):
+    def get_co2_rating(self, is_binary):
         """
         :param is_binary: logical [True or False]
         Retaining only the most least bits in a position
@@ -167,6 +167,13 @@ class SleightKeys:
             return self.get_rating(df, is_oxygen=False, is_binary=True)
         else:
             return self.get_rating(df, is_oxygen=False, is_binary=False)
+
+    def life_support_rating(self):
+        """
+        This comes from both co2 and oxygen as multiplication
+        :return: float
+        """
+        return self.get_co2_rating(is_binary=False) * self.get_oxygen_rating(is_binary=False)
 
 
 if __name__ == "__main__":
@@ -212,7 +219,7 @@ if __name__ == "__main__":
     print("")
     # Day 3: First_solution solution
     text_data = utils.read_text_file("../data/day3_data.csv")
-    text_data = utils.read_text_file("../data/day3_example_data.csv")
+    #text_data = utils.read_text_file("../data/day3_example_data.csv")
     obj = SleightKeys(text_data)
     print("")
     print("Day 3 part 1 results")
@@ -222,4 +229,5 @@ if __name__ == "__main__":
     print("Day 3 part 2 results")
     print("------------------------------")
     print(f'Oxygen rating: {obj.get_oxygen_rating(is_binary=False)}')
-    print(f'Epsilon rating: {obj.get_epsilon_rating(is_binary=False)}')
+    print(f'co2 rating: {obj.get_co2_rating(is_binary=False)}')
+    print(f'Life support rating: {obj.life_support_rating()}')
