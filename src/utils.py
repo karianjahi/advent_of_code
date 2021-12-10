@@ -2,6 +2,8 @@
 Some utility functions
 """
 
+import pandas as pd
+
 
 def read_text_file(text_file):
     """
@@ -42,7 +44,65 @@ def use_tuples(func):
     :param func: A function that takes 2 attributes
     :return:
     """
+
     def inner(list_of_tuples):
         for my_tuple in list_of_tuples:
             func(my_tuple[0], my_tuple[1])
         return inner
+
+
+def get_least_common(alist, bit_to_prioritize):
+    """
+    Identify the least common bit
+    :param alist:
+    :param bit_to_prioritize: int. Which index to prioritize
+    :return: int
+    """
+    df = pd.DataFrame(alist)
+    value_counts = df.value_counts()
+    last_row = value_counts.iloc[-1]
+    least_common_df = value_counts[value_counts == last_row]
+    if len(least_common_df) == 1:
+        return least_common_df.index[0][0]  # multi-index
+    else:
+        if bit_to_prioritize in least_common_df:
+            return bit_to_prioritize
+
+
+def get_most_common(alist, bit_to_prioritize):
+    """
+    Identify the most common bit
+    :param alist:
+    :param bit_to_prioritize: int. Which index to prioritize
+    :return: int
+    """
+    df = pd.DataFrame(alist)
+    value_counts = df.value_counts()
+    first_row = value_counts.iloc[0]
+    most_common_df = value_counts[value_counts == first_row]
+    if len(most_common_df) == 1:
+        return most_common_df.index[0][0]  # multi-index
+    else:
+        if bit_to_prioritize in most_common_df:
+            return bit_to_prioritize
+
+
+def concatenate_list_into_string(alist):
+    """
+    Given a list like
+    alist = ["ada", "subtract", "divide", "multiply"]
+    the aim is to concatentate the to have a
+    string of the form: "adasubstractdividemultiply"
+    :param alist: list [list of items]
+    :return: str
+    """
+    string = ""
+    for item in alist:
+        string += f'{item}'
+    return string
+
+
+if __name__ == "__main__":
+    kalist = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0]
+    # new_list = [None,  None,   0,   1,  None,  None,  None,  None,  None,  None,  None,  None]
+    print(concatenate_list_into_string(kalist))
