@@ -3,7 +3,10 @@ Playing bingo with three boards each consisting of 5x5
 grid. Each board wins after row or column is has been
 filled
 """
+import utils
+import pandas
 import pandas as pd
+
 
 class Bingo:
     """
@@ -34,13 +37,21 @@ class Bingo:
     def read_boards_data(self):
         """
         Reads the boards data
-        :return: None
+        :return: dictionary of pandas dataframes
         """
+        with open(self.boards_data_file, "r") as file:
+            data = file.read()
+        board_lists = utils.divide_list_into_equal_chunks([i.strip() for i in data.split("\n") if i != ""], 5)
+        df_board_dict = {}
+        for index, board_list in enumerate(board_lists):
+            board_split = [[int(j) for j in i.split()] for i in board_list]
+            df_board_dict[index+1] = pd.DataFrame(board_split)
+        return df_board_dict
 
 
 
 if __name__ == "__main__":
     draws_data_file = "../data/day4_draws_example_data.csv"
-    boards_data_file = "../day4_boards_example_data.csv"
+    boards_data_file = "../data/day4_boards_example_data.csv"
     obj = Bingo(draws_data_file, boards_data_file)
-    print(obj.read_draws_data())
+    print(obj.read_boards_data())

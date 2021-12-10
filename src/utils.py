@@ -101,8 +101,17 @@ def concatenate_list_into_string(alist):
         string += f'{item}'
     return string
 
+def divide_list_into_equal_chunks(alist, chunks):
+    """
+    Divide a list into equal chunks
+    :param alist: list
+    :param chunks: int
+    :return: list
+    """
+    return [alist[i:i + chunks] for i in range(0, len(alist), chunks)]
 
 if __name__ == "__main__":
     kalist = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0]
     # new_list = [None,  None,   0,   1,  None,  None,  None,  None,  None,  None,  None,  None]
     print(concatenate_list_into_string(kalist))
+    print(divide_list_into_equal_chunks(kalist, 4))
