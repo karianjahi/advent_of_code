@@ -4,7 +4,6 @@ grid. Each board wins after row or column is has been
 filled
 """
 import utils
-import pandas
 import pandas as pd
 
 
