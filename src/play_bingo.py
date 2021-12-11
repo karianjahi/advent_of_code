@@ -24,6 +24,12 @@ class Bingo:
         self.boards_data_file = boards_data_file
         self.draws_data = None
         self.boards_data = None
+        self.winning_board = None
+        self.winning_score = None
+        self.winning_row_number = None
+        self.winning_row_values = None
+        self.unmarked_sum = None
+        self.winning_score = None
 
     def read_draws_data(self):
         """
@@ -94,6 +100,8 @@ class Bingo:
                                                       sub_row=None,
                                                       sub_column=sub_column)
                             return f'Board number {board_number}'
+    def play_all_boards(self):
+
 
 
 
