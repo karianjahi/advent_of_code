@@ -143,6 +143,79 @@ def table2list(table, consider_floats_only=True):
         return [i for i in my_list if isinstance(i, int)]
     return my_list
 
+def list2string(alist, with_space):
+    """
+    given a list like [2, 5, 6] we
+    want to concatenate the numbers into
+    this string "2 5 6"
+    :param alist: list [a list of  items]
+    :param with_space: logical [should we use space or not?]
+    :return str [a string]
+    """
+    string = ""
+    for item in alist:
+        if with_space:
+            string = string + " " + str(item)
+        else:
+            string += str(item)
+    return string
+
+def print_winning_board(board_number,
+                        board_original,
+                        board_after,
+                        values,
+                        unmarked_sum,
+                        draw,
+                        sub_row = None,
+                        sub_column = None):
+    """
+    Printing out some information about the winning board
+    :param board_number: board number
+    :subrow: are we dealing with a row or column win
+    : values: values of the winning row or column
+    : marked sum: sum of remaining values after table has been filled by drawns
+    : draw: the no drawn at this point
+    : board_original: original board
+    : board_after: mutilated board after play
+    """
+    score = unmarked_sum * draw
+    if sub_row is not None:
+        print("")
+        print("")
+        print("")
+        print(f'WINNING BOARD NUMBER: {board_number}\n'
+              f'WINNING ROW NUMBER: {sub_row} OR ROW INDEX: {int(sub_row.split("r")[1]) - 1}\n'
+              f'WINNING ROW VALUES: {list2string(values, True)}\n'
+              f'UNMARKED SUM: {unmarked_sum}\n'
+              f'WINNING SCORE: {score}')
+        print("---------------------------------")
+        print("")
+        print(f"Original board no. {board_number}")
+        print(board_original)
+        print("")
+        print(f"Updated board no. {board_number}")
+        print(board_after)
+        print("")
+    else:
+        print(f'WINNING BOARD NUMBER: {board_number}\n'
+              f'WINNING COL NUMBER: {sub_column} OR COL INDEX: {int(sub_column.split("r")[1]) - 1}\n'
+              f'WINNING COL VALUES: {list2string(values, True)}\n'
+              f'UNMARKED SUM: {unmarked_sum}\n'
+              f'WINNING SCORE: {score}')
+        print("")
+        print("")
+        print("")
+        print("---------------------------------")
+        print("")
+        print(f"Original board no. {board_number}")
+        print(board_original)
+        print("")
+        print(f"Updated board no. {board_number}")
+        print(board_after)
+        print("")
+
+
+
 if __name__ == "__main__":
     #kalist = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0]
     # new_list = [None,  None,   0,   1,  None,  None,  None,  None,  None,  None,  None,  None]
@@ -151,6 +224,7 @@ if __name__ == "__main__":
     #my_list = ["jal", "jal", "jal", "jal"]
     #print(is_all_equal(my_list))
 
-    df = pd.read_csv("../data/table2list_tester_table.csv")
-    df.index = [f'r{i+1}' for i in range(len(df))]
-    print(table2list(df, True))
+    #df = pd.read_csv("../data/table2list_tester_table.csv")
+    #df.index = [f'r{i+1}' for i in range(len(df))]
+    #print(table2list(df, True))
+    print(list2string([5, 8, 9], True))

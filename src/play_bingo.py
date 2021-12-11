@@ -58,42 +58,42 @@ class Bingo:
         board_table.columns = [f'c{i+1}' for i in board_table.columns]
         board_table.index = [f'r{i+1}' for i in board_table.index]
         board_table_original = board_table.copy()
-        print("")
-        print(board_table)
-        print("")
-        print(self.draws_data)
-        print("")
-        print("")
         for draw in self.draws_data:
             for row in board_table.index:
                 for col in board_table.columns:
                     row_col_value = board_table.loc[row, col]
                     if row_col_value == draw:
                         board_table.loc[row, col] = "*"
-                    print("")
-                    print("")
-                    print("")
-                    print(board_table)
                     # compare row values for equality
-                    for irow in board_table.index:
-                        if utils.is_all_equal(board_table.loc[irow]):
-                            row_values = [i for i in board_table_original.loc[irow]]
+                    for sub_row in board_table.index:
+                        if utils.is_all_equal(board_table.loc[sub_row]):
+                            flag = True
+                            row_values = [i for i in board_table_original.loc[sub_row]]
                             # Calculate sum of unmarked numbers in the table:
                             unmarked_sum = sum(utils.table2list(board_table, True))
-                            score = unmarked_sum * draw
+                            utils.print_winning_board(board_number=board_number,
+                                                      board_original=board_table_original,
+                                                      board_after=board_table,
+                                                      values=row_values,
+                                                      unmarked_sum=unmarked_sum,
+                                                      draw=draw,
+                                                      sub_row=sub_row,
+                                                      sub_column=None)
+                            return f'Board number {board_number}'
 
-                            return f'Board number {board_number} wins at row {irow}: ' \
-                                   f'row values are: {row_values}. unmarked sum = {unmarked_sum}.' \
-                                   f' Winning score = {score}'
-                    # compare col values for equality
-                    for icol in board_table.columns:
-                        if utils.is_all_equal(board_table_original.loc[:, icol]):
-                            col_values = [i for i in board_table_original.loc[:, icol]]
+                    for sub_column in board_table.columns:
+                        if utils.is_all_equal(board_table_original.loc[:, sub_column]):
+                            col_values = [i for i in board_table_original.loc[:, sub_column]]
                             unmarked_sum = sum(utils.table2list(board_table, True))
-                            score = unmarked_sum * draw
-                            return f'Board number {board_number} wins at column {icol}: ' \
-                                   f'column values are: {col_values}. unmarked sum = {unmarked_sum}. ' \
-                                   f'Winning score = {score}'
+                            utils.print_winning_board(board_number=board_number,
+                                                      board_original=board_table_original,
+                                                      board_after=board_table,
+                                                      values=col_values,
+                                                      unmarked_sum=unmarked_sum,
+                                                      draw=draw,
+                                                      sub_row=None,
+                                                      sub_column=sub_column)
+                            return f'Board number {board_number}'
 
 
 
