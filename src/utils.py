@@ -110,8 +110,47 @@ def divide_list_into_equal_chunks(alist, chunks):
     """
     return [alist[i:i + chunks] for i in range(0, len(alist), chunks)]
 
+def is_all_equal(alist):
+    """
+    Checking if all members of a list are equal
+    :return logical
+    """
+    first_member = alist[0]
+    logic_list = []
+    for item in alist:
+        if item == first_member:
+            logic_list.append(True)
+        else:
+            logic_list.append(False)
+    return all(logic_list)
+
+def table2list(table, consider_floats_only=True):
+    """
+    Given a pandas table, convert
+    it to a list of values
+    :param consider_floats_only: should we consider only floats?
+    :return list
+    """
+    my_list = []
+    for col in table.columns:
+        column_values = table[col]
+        for i in column_values:
+            try:
+                my_list.append(int(i))
+            except:
+                my_list.append(i)
+    if consider_floats_only:
+        return [i for i in my_list if isinstance(i, int)]
+    return my_list
+
 if __name__ == "__main__":
-    kalist = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0]
+    #kalist = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0]
     # new_list = [None,  None,   0,   1,  None,  None,  None,  None,  None,  None,  None,  None]
-    print(concatenate_list_into_string(kalist))
-    print(divide_list_into_equal_chunks(kalist, 4))
+    #print(concatenate_list_into_string(kalist))
+    #print(divide_list_into_equal_chunks(kalist, 4))
+    #my_list = ["jal", "jal", "jal", "jal"]
+    #print(is_all_equal(my_list))
+
+    df = pd.read_csv("../data/table2list_tester_table.csv")
+    df.index = [f'r{i+1}' for i in range(len(df))]
+    print(table2list(df, True))
