@@ -26,10 +26,30 @@ def check_if_this_board_has_won(board_table):
             return True
 
 
+def mark_all_tables_per_draw(draw, boards_data_dict):
+    """
+    Once a draw has been drawn,
+    we need to update the table
+    with a say a * at that point
+    :param draw: int [number drawn]
+    :param boards_data_dict: dictionary of tables
+    """
+    for key in boards_data_dict:
+        table = boards_data_dict[key]
+        for col_index, col in enumerate(table.columns):
+            column_data = [i for i in table[col]]
+            for row_index, value in enumerate(column_data):
+                # print(f'row: {row_index}  column: {col_index} value: {value}')
+                if value == draw:
+                    table.iloc[row_index, col_index] = "*"
+        boards_data_dict[key] = table
+    return boards_data_dict
+
+
 class Bingo:
     """
-    3 boards each with a grid of 5x5. Won
-    when a board has numbers across a row
+    n boards each with a grid of 5x5. Won
+    when a board has equal numbers across a row
     or column
     """
 
@@ -67,25 +87,6 @@ class Bingo:
             df_board_dict[index + 1] = pd.DataFrame(board_split)
         return df_board_dict
 
-    def mark_all_tables_per_draw(self, draw, boards_data_dict):
-        """
-        Once a draw has been drawn,
-        we need to update the table
-        with a say a * at that point
-        :param draw: int [number drawn]
-        :param boards_data_dict: dictionary of tables
-        """
-        for key in boards_data_dict:
-            table = boards_data_dict[key]
-            for col_index, col in enumerate(table.columns):
-                column_data = [i for i in table[col]]
-                for row_index, value in enumerate(column_data):
-                    # print(f'row: {row_index}  column: {col_index} value: {value}')
-                    if value == draw:
-                        table.iloc[row_index, col_index] = "*"
-            boards_data_dict[key] = table
-        return boards_data_dict
-
     def determine_winning_board(self):
         """
         Here we want to make a single move on all
@@ -98,7 +99,7 @@ class Bingo:
             print(f'Draw number: {draw_index+1}/{len(self.draws_data)}')
             if draw_index == 0:
                 tables_dict_per_draw = self.read_boards_data()  # read the whole data at the beginning to be able to update later
-            tables_dict_per_draw = self.mark_all_tables_per_draw(draw, tables_dict_per_draw)
+            tables_dict_per_draw = mark_all_tables_per_draw(draw, tables_dict_per_draw)
             for key in tables_dict_per_draw:
                 board_table = tables_dict_per_draw[key]
                 if check_if_this_board_has_won(board_table):
