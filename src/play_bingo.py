@@ -14,6 +14,7 @@ def check_if_this_board_has_won(board_table):
     which rows or columns have complete stars.
     :param board_table: pandas table [with possible marks
     see preceding function]
+
     :return logic
     """
     for name in board_table.columns:
@@ -85,7 +86,7 @@ class Bingo:
         for index, board_list in enumerate(board_lists):
             board_split = [[int(j) for j in i.split()] for i in board_list]
             df_board_dict[index + 1] = pd.DataFrame(board_split)
-        return df_board_dict
+        self.boards_data = df_board_dict
 
     def determine_winning_board(self):
         """
@@ -94,11 +95,12 @@ class Bingo:
         win
         """
         self.read_draws_data()
+        self.read_boards_data()
         tables_dict_per_draw = None  # to avoid pycharm highlighting it
         for draw_index, draw in enumerate(self.draws_data):
-            print(f'Draw number: {draw_index+1}/{len(self.draws_data)}')
+            print(f'Draw number: {draw_index + 1}/{len(self.draws_data)}')
             if draw_index == 0:
-                tables_dict_per_draw = self.read_boards_data()  # read the whole data at the beginning to be able to update later
+                tables_dict_per_draw = self.boards_data  # read the whole data at the beginning to be able to update later
             tables_dict_per_draw = mark_all_tables_per_draw(draw, tables_dict_per_draw)
             for key in tables_dict_per_draw:
                 board_table = tables_dict_per_draw[key]
@@ -110,7 +112,7 @@ class Bingo:
                     unmarked_sum = sum(utils.table2list(board_table, consider_floats_only=True))
                     print("Unplayed Board")
                     print("-----------------------")
-                    print(self.read_boards_data()[key])
+                    print(self.boards_data[key])
                     print("")
                     print("-----------------------")
                     print("Current Board")
@@ -124,6 +126,36 @@ class Bingo:
                            f'last drawn: {draw}\n' \
                            f'score: {unmarked_sum * draw}'
 
+    def get_last_board_to_win(self):
+        """
+        Get the last board to win
+        """
+        winning_boards = []
+        self.read_draws_data()
+        self.read_boards_data()
+        boards_data_dict = self.boards_data
+        for draw_index, draw in enumerate(self.draws_data):
+            boards_data_dict = mark_all_tables_per_draw(draw, boards_data_dict)
+            dict_keys = [i for i in boards_data_dict.keys()]
+            key = 1
+            while key in dict_keys:
+                if check_if_this_board_has_won(boards_data_dict[key]):
+                    unmarked_sum = sum(utils.table2list(boards_data_dict[key], True))
+                    winning_boards.append({"winning_board": key,
+                                           "current_board": boards_data_dict[key],
+                                           "last_draw": draw,
+                                           "unmarked_sum": unmarked_sum,
+                                           "score": unmarked_sum * draw})
+                    # print("")
+                    # print("-------------------------------")
+                    # print(f'Board {key} has won the game')
+                    # print("--------------------------------")
+                    # print("")
+                    ncolumns = len(boards_data_dict[key].columns)
+                    boards_data_dict[key] = utils.populate_table_with_random_values(boards_data_dict[key], 5000, 10000, ncolumns)
+                key += 1
+        return winning_boards
+
 
 if __name__ == "__main__":
     # draws_data_file = "../data/day4_draws_example_data.csv"
@@ -132,4 +164,17 @@ if __name__ == "__main__":
     draws_data_file = "../data/day4_draws_data.csv"
     boards_data_file = "../data/day4_boards_data.csv"
     obj = Bingo(draws_data_file, boards_data_file)
-    print(obj.determine_winning_board())
+    winners = obj.get_last_board_to_win()
+    for winner in winners:
+        print("---------------------------")
+        print(f'Board number: {winner["winning_board"]}')
+        print("Current board status")
+        print("------------------------------")
+        print(winner["current_board"])
+        print(f'Current draw: {winner["last_draw"]}')
+        print(f'Unmarked sum: {winner["unmarked_sum"]}')
+        print(f'Score: {winner["score"]}')
+        print("----------------------------")
+        print("")
+        print("")
+        print("")

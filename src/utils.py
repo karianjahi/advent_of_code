@@ -3,6 +3,7 @@ Some utility functions
 """
 
 import pandas as pd
+import numpy as np
 
 
 def read_text_file(text_file):
@@ -177,3 +178,14 @@ def get_fastest_winner(dict_list, sort_key):
     return dict_list[df.index[0]]
 
 
+def populate_table_with_random_values(table, start, end, ncol=5):
+    all_values = table2list(table, False)
+    random_values = np.random.randint(start, end, len(all_values))
+    return pd.DataFrame(divide_list_into_equal_chunks(random_values, ncol))
+
+
+
+
+if __name__ == "__main__":
+    table = pd.read_csv("../data/table2list_tester_table.csv")
+    print(populate_table_with_random_values(table, 5000, 10000, ncol=5))
