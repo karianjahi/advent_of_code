@@ -101,6 +101,7 @@ def concatenate_list_into_string(alist):
         string += f'{item}'
     return string
 
+
 def divide_list_into_equal_chunks(alist, chunks):
     """
     Divide a list into equal chunks
@@ -109,6 +110,7 @@ def divide_list_into_equal_chunks(alist, chunks):
     :return: list
     """
     return [alist[i:i + chunks] for i in range(0, len(alist), chunks)]
+
 
 def is_all_equal(alist):
     """
@@ -123,6 +125,7 @@ def is_all_equal(alist):
         else:
             logic_list.append(False)
     return all(logic_list)
+
 
 def table2list(table, consider_floats_only=True):
     """
@@ -143,6 +146,7 @@ def table2list(table, consider_floats_only=True):
         return [i for i in my_list if isinstance(i, int)]
     return my_list
 
+
 def list2string(alist, with_space):
     """
     given a list like [2, 5, 6] we
@@ -160,6 +164,7 @@ def list2string(alist, with_space):
             string += str(item)
     return string
 
+
 def get_fastest_winner(dict_list, sort_key):
     """
     get fastest winner
@@ -172,76 +177,3 @@ def get_fastest_winner(dict_list, sort_key):
     return dict_list[df.index[0]]
 
 
-def print_winning_board(board_number,
-                        board_original,
-                        board_after,
-                        values,
-                        unmarked_sum,
-                        draw,
-                        sub_row = None,
-                        sub_column = None):
-    """
-    Printing out some information about the winning board
-    :param board_number: board number
-    :subrow: are we dealing with a row or column win
-    : values: values of the winning row or column
-    : marked sum: sum of remaining values after table has been filled by drawns
-    : draw: the no drawn at this point
-    : board_original: original board
-    : board_after: mutilated board after play
-    """
-    score = unmarked_sum * draw
-    if sub_row is not None:
-        print("")
-        print("")
-        print("")
-        print(f'WINNING BOARD NUMBER: {board_number}\n'
-              f'WINNING ROW NUMBER: {sub_row} OR ROW INDEX: {int(sub_row.split("r")[1]) - 1}\n'
-              f'WINNING ROW VALUES: {list2string(values, True)}\n'
-              f'UNMARKED SUM: {unmarked_sum}\n'
-              f'WINNING SCORE: {score}')
-        print("---------------------------------")
-        print("")
-        print(f"Original board no. {board_number}")
-        print(board_original)
-        print("")
-        print(f"Updated board no. {board_number}")
-        print(board_after)
-        print("")
-    else:
-        print(f'WINNING BOARD NUMBER: {board_number}\n'
-              f'WINNING COL NUMBER: {sub_column} OR COL INDEX: {int(sub_column.split("r")[1]) - 1}\n'
-              f'WINNING COL VALUES: {list2string(values, True)}\n'
-              f'UNMARKED SUM: {unmarked_sum}\n'
-              f'WINNING SCORE: {score}')
-        print("")
-        print("")
-        print("")
-        print("---------------------------------")
-        print("")
-        print(f"Original board no. {board_number}")
-        print(board_original)
-        print("")
-        print(f"Updated board no. {board_number}")
-        print(board_after)
-        print("")
-
-
-
-if __name__ == "__main__":
-    #kalist = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0]
-    # new_list = [None,  None,   0,   1,  None,  None,  None,  None,  None,  None,  None,  None]
-    #print(concatenate_list_into_string(kalist))
-    #print(divide_list_into_equal_chunks(kalist, 4))
-    my_list = ["jal", "jal", "jal", "jal"]
-    print(is_all_equal(my_list))
-
-    #df = pd.read_csv("../data/table2list_tester_table.csv")
-    #df.index = [f'r{i+1}' for i in range(len(df))]
-    #print(table2list(df, True))
-    # print(list2string([5, 8, 9], True))
-    adict_list = [{'board_number': 1, 'iterations': 3383},
-                  {'board_number': 2, 'iterations': 4735},
-                  {'board_number': 3, 'iterations': 2781}]
-    print(get_fastest_winner(adict_list, sort_key="iterations"))
-    print(max(5, 8))

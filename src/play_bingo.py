@@ -14,21 +14,16 @@ def check_if_this_board_has_won(board_table):
     which rows or columns have complete stars.
     :param board_table: pandas table [with possible marks
     see preceding function]
-    :return dict [keys: row/column number, unmarked sum, score]
+    :return logic
     """
-    print(board_table)
     for name in board_table.columns:
         col_values = [i for i in board_table[name]]
         if utils.is_all_equal(col_values):
             return True
-        else:
-            return False
     for row in board_table.index:
         row_values = [i for i in board_table.loc[row]]
         if utils.is_all_equal(row_values):
             return True
-        else:
-            return False
 
 
 class Bingo:
@@ -100,25 +95,40 @@ class Bingo:
         self.read_draws_data()
         tables_dict_per_draw = None  # to avoid pycharm highlighting it
         for draw_index, draw in enumerate(self.draws_data):
+            print(f'Draw number: {draw_index+1}/{len(self.draws_data)}')
             if draw_index == 0:
                 tables_dict_per_draw = self.read_boards_data()  # read the whole data at the beginning to be able to update later
             tables_dict_per_draw = self.mark_all_tables_per_draw(draw, tables_dict_per_draw)
             for key in tables_dict_per_draw:
                 board_table = tables_dict_per_draw[key]
-                win_flag = check_if_this_board_has_won(board_table)
-                if win_flag:
-                    print("-----------------------------")
-                    print(f'Table {key} has won the game')
-                    print("-----------------------------")
+                if check_if_this_board_has_won(board_table):
+                    print("")
+                    print("")
+                    print(f'Winning board: {key}')
+                    print("-----------------------")
+                    unmarked_sum = sum(utils.table2list(board_table, consider_floats_only=True))
+                    print("Unplayed Board")
+                    print("-----------------------")
+                    print(self.read_boards_data()[key])
+                    print("")
+                    print("-----------------------")
+                    print("Current Board")
+                    print("-----------------------")
                     print(board_table)
-                    return f'Table {key} has won the game'
+                    print("")
+                    print("-----------------------")
+                    print("Additional results")
+                    print("-----------------------")
+                    return f'unmarked sum : {unmarked_sum}\n' \
+                           f'last drawn: {draw}\n' \
+                           f'score: {unmarked_sum * draw}'
 
 
 if __name__ == "__main__":
-    draws_data_file = "../data/day4_draws_example_data.csv"
-    boards_data_file = "../data/day4_boards_example_data.csv"
+    # draws_data_file = "../data/day4_draws_example_data.csv"
+    # boards_data_file = "../data/day4_boards_example_data.csv"
     #
-    # draws_data_file = "../data/day4_draws_data.csv"
-    # boards_data_file = "../data/day4_boards_data.csv"
+    draws_data_file = "../data/day4_draws_data.csv"
+    boards_data_file = "../data/day4_boards_data.csv"
     obj = Bingo(draws_data_file, boards_data_file)
     print(obj.determine_winning_board())
