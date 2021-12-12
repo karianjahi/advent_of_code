@@ -7,6 +7,30 @@ import utils
 import pandas as pd
 
 
+def check_if_this_board_has_won(board_table):
+    """
+    We need to check if a table has won by going
+    through the columns and rows trying to find
+    which rows or columns have complete stars.
+    :param board_table: pandas table [with possible marks
+    see preceding function]
+    :return dict [keys: row/column number, unmarked sum, score]
+    """
+    print(board_table)
+    for name in board_table.columns:
+        col_values = [i for i in board_table[name]]
+        if utils.is_all_equal(col_values):
+            return True
+        else:
+            return False
+    for row in board_table.index:
+        row_values = [i for i in board_table.loc[row]]
+        if utils.is_all_equal(row_values):
+            return True
+        else:
+            return False
+
+
 class Bingo:
     """
     3 boards each with a grid of 5x5. Won
@@ -24,12 +48,6 @@ class Bingo:
         self.boards_data_file = boards_data_file
         self.draws_data = None
         self.boards_data = None
-        self.winning_board = None
-        self.winning_score = None
-        self.winning_row_number = None
-        self.winning_row_values = None
-        self.unmarked_sum = None
-        self.winning_score = None
 
     def read_draws_data(self):
         """
@@ -51,65 +69,56 @@ class Bingo:
         df_board_dict = {}
         for index, board_list in enumerate(board_lists):
             board_split = [[int(j) for j in i.split()] for i in board_list]
-            df_board_dict[index+1] = pd.DataFrame(board_split)
+            df_board_dict[index + 1] = pd.DataFrame(board_split)
         return df_board_dict
 
-    def play_one_board(self, board_number):
+    def mark_all_tables_per_draw(self, draw, boards_data_dict):
         """
-        :param board_number: int [board number in dict]
-        Draws for a single board
+        Once a draw has been drawn,
+        we need to update the table
+        with a say a * at that point
+        :param draw: int [number drawn]
+        :param boards_data_dict: dictionary of tables
         """
+        for key in boards_data_dict:
+            table = boards_data_dict[key]
+            for col_index, col in enumerate(table.columns):
+                column_data = [i for i in table[col]]
+                for row_index, value in enumerate(column_data):
+                    # print(f'row: {row_index}  column: {col_index} value: {value}')
+                    if value == draw:
+                        table.iloc[row_index, col_index] = "*"
+            boards_data_dict[key] = table
+        return boards_data_dict
 
-        board_table = self.read_boards_data()[board_number]
-        board_table.columns = [f'c{i+1}' for i in board_table.columns]
-        board_table.index = [f'r{i+1}' for i in board_table.index]
-        board_table_original = board_table.copy()
-        for draw in self.draws_data:
-            for row in board_table.index:
-                for col in board_table.columns:
-                    row_col_value = board_table.loc[row, col]
-                    if row_col_value == draw:
-                        board_table.loc[row, col] = "*"
-                    # compare row values for equality
-                    for sub_row in board_table.index:
-                        if utils.is_all_equal(board_table.loc[sub_row]):
-                            flag = True
-                            row_values = [i for i in board_table_original.loc[sub_row]]
-                            # Calculate sum of unmarked numbers in the table:
-                            unmarked_sum = sum(utils.table2list(board_table, True))
-                            utils.print_winning_board(board_number=board_number,
-                                                      board_original=board_table_original,
-                                                      board_after=board_table,
-                                                      values=row_values,
-                                                      unmarked_sum=unmarked_sum,
-                                                      draw=draw,
-                                                      sub_row=sub_row,
-                                                      sub_column=None)
-                            return f'Board number {board_number}'
-
-                    for sub_column in board_table.columns:
-                        if utils.is_all_equal(board_table_original.loc[:, sub_column]):
-                            col_values = [i for i in board_table_original.loc[:, sub_column]]
-                            unmarked_sum = sum(utils.table2list(board_table, True))
-                            utils.print_winning_board(board_number=board_number,
-                                                      board_original=board_table_original,
-                                                      board_after=board_table,
-                                                      values=col_values,
-                                                      unmarked_sum=unmarked_sum,
-                                                      draw=draw,
-                                                      sub_row=None,
-                                                      sub_column=sub_column)
-                            return f'Board number {board_number}'
-    def play_all_boards(self):
-
-
-
+    def determine_winning_board(self):
+        """
+        Here we want to make a single move on all
+        boards and inspect the results for a possible
+        win
+        """
+        self.read_draws_data()
+        tables_dict_per_draw = None  # to avoid pycharm highlighting it
+        for draw_index, draw in enumerate(self.draws_data):
+            if draw_index == 0:
+                tables_dict_per_draw = self.read_boards_data()  # read the whole data at the beginning to be able to update later
+            tables_dict_per_draw = self.mark_all_tables_per_draw(draw, tables_dict_per_draw)
+            for key in tables_dict_per_draw:
+                board_table = tables_dict_per_draw[key]
+                win_flag = check_if_this_board_has_won(board_table)
+                if win_flag:
+                    print("-----------------------------")
+                    print(f'Table {key} has won the game')
+                    print("-----------------------------")
+                    print(board_table)
+                    return f'Table {key} has won the game'
 
 
 if __name__ == "__main__":
     draws_data_file = "../data/day4_draws_example_data.csv"
     boards_data_file = "../data/day4_boards_example_data.csv"
+    #
+    # draws_data_file = "../data/day4_draws_data.csv"
+    # boards_data_file = "../data/day4_boards_data.csv"
     obj = Bingo(draws_data_file, boards_data_file)
-    print(obj.play_one_board(3))
-
-
+    print(obj.determine_winning_board())

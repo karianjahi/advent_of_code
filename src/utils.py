@@ -160,6 +160,18 @@ def list2string(alist, with_space):
             string += str(item)
     return string
 
+def get_fastest_winner(dict_list, sort_key):
+    """
+    get fastest winner
+    :param dict_list: a list of dictionaries
+    :param sort_key: key to sort dictionary
+    :return list
+    """
+    df = pd.DataFrame(dict_list)
+    df.sort_values(sort_key, inplace=True)
+    return dict_list[df.index[0]]
+
+
 def print_winning_board(board_number,
                         board_original,
                         board_after,
@@ -221,10 +233,15 @@ if __name__ == "__main__":
     # new_list = [None,  None,   0,   1,  None,  None,  None,  None,  None,  None,  None,  None]
     #print(concatenate_list_into_string(kalist))
     #print(divide_list_into_equal_chunks(kalist, 4))
-    #my_list = ["jal", "jal", "jal", "jal"]
-    #print(is_all_equal(my_list))
+    my_list = ["jal", "jal", "jal", "jal"]
+    print(is_all_equal(my_list))
 
     #df = pd.read_csv("../data/table2list_tester_table.csv")
     #df.index = [f'r{i+1}' for i in range(len(df))]
     #print(table2list(df, True))
-    print(list2string([5, 8, 9], True))
+    # print(list2string([5, 8, 9], True))
+    adict_list = [{'board_number': 1, 'iterations': 3383},
+                  {'board_number': 2, 'iterations': 4735},
+                  {'board_number': 3, 'iterations': 2781}]
+    print(get_fastest_winner(adict_list, sort_key="iterations"))
+    print(max(5, 8))
