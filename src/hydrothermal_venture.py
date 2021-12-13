@@ -6,6 +6,11 @@ import pandas as pd
 import utils
 
 
+def identify_frequency_of_overlaps(df, minimum=2):
+    df2list = utils.table2list(df, True)
+    return len([i for i in df2list if i >= minimum])
+
+
 class HydrothermalVenture:
     """
     Hydrothermal vents on ocean floor
@@ -78,16 +83,72 @@ class HydrothermalVenture:
         return working_dataframe
 
     def create_table_but_consider_diagonals_too(self):
-        pass
-
-    def identify_frequency_of_overlaps(self):
-        df = self.create_table_of_horizontal_and_vertical()
-        df2list = utils.table2list(df, True)
-        return len([i for i in df2list if i > 1])
+        """
+        Creating table by populating it with the mappings 
+        given in the data e.g. An entry 
+        like 1,1 -> 3,3 covers points 1,1, 2,2, and 3,3.
+        An entry like 9,7 -> 7,9 covers points 9,7, 8,8, and 7,9.
+        """
+        max_value = self.determine_data_range()
+        working_dataframe = pd.DataFrame(np.zeros((max_value + 1, max_value + 1)))
+        working_dataframe = working_dataframe.astype(int)
+        alist = self.convert_data2list()
+        print("")
+        print("original list:", alist)
+        print("")
+        print("")
+        for index, item in enumerate(alist):
+            values = item.split("->")
+            values = [[int(k) for k in j.split(",")] for j in [i.strip() for i in values]]
+            x1 = values[0][0]
+            x2 = values[1][0]
+            y1 = values[0][1]
+            y2 = values[1][1]
+            if y1 == y2:
+                if x1 < x2:
+                    x_values = [i for i in range(x1, x2+1, 1)]
+                    for x_value in x_values:
+                        working_dataframe.loc[y1, x_value] += 1
+                if x1 > x2:
+                    x_values = [i for i in range(x1, x2-1, -1)]
+                    for x_value in x_values:
+                        working_dataframe.loc[y1, x_value] += 1
+            if x1 == x2:
+                if y1 < y2:
+                    y_values = [i for i in range(y1, y2+1, 1)]
+                    for y_value in y_values:
+                        working_dataframe.loc[y_value, x1] += 1
+                if y1 > y2:
+                    y_values = [i for i in range(y1, y2-1, -1)]
+                    for y_value in y_values:
+                        working_dataframe.loc[y_value, x1] += 1
+            if x1 < x2 and y1 < y2:
+                x_values = [i for i in range(x1, x2+1, 1)]
+                y_values = [i for i in range(y1, y2+1, 1)]
+                for x_value, y_value in zip(x_values, y_values):
+                    working_dataframe.loc[y_value, x_value] += 1
+            if x1 > x2 and y1 > y2:
+                x_values = [i for i in range(x1, x2-1, -1)]
+                y_values = [i for i in range(y1, y2-1, -1)]
+                for x_value, y_value in zip(x_values, y_values):
+                    working_dataframe.loc[y_value, x_value] += 1
+            if x1 > x2 and y1 < y2:
+                x_values = [i for i in range(x1, x2-1, -1)]
+                y_values = [i for i in range(y1, y2+1, 1)]
+                for x_value, y_value in zip(x_values, y_values):
+                    working_dataframe.loc[y_value, x_value] += 1
+            if x1 < x2 and y1 > y2:
+                x_values = [i for i in range(x1, x2+1, 1)]
+                y_values = [i for i in range(y1, y2-1, -1)]
+                for x_value, y_value in zip(x_values, y_values):
+                    working_dataframe.loc[y_value, x_value] += 1
+        working_dataframe.replace(0, ".", inplace=True)
+        return working_dataframe
 
 
 if __name__ == "__main__":
     # data_file = "../data/data5_data.csv"
     data_file = "../data/data5_example_data.csv"
     obj = HydrothermalVenture(data_file)
-    print(obj.create_table_of_horizontal_and_vertical())
+    mutilated_table = obj.create_table_but_consider_diagonals_too()
+    print(identify_frequency_of_overlaps(mutilated_table))
