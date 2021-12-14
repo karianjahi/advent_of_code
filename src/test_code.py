@@ -2,7 +2,7 @@
 Test for possible bugs in find sleight keys
 """
 import pytest
-from find_sleight_keys import SleightKeys
+from sonar_sweep import SleightKeys
 
 
 class TestFindSleightKeys:

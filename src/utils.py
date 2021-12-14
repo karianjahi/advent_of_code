@@ -184,10 +184,9 @@ def populate_table_with_random_values(table, start, end, ncol=5):
     return pd.DataFrame(divide_list_into_equal_chunks(random_values, ncol))
 
 
-
-
 if __name__ == "__main__":
     table = pd.read_csv("../data/table2list_tester_table.csv")
-    print(populate_table_with_random_values(table, 5000, 10000, ncol=5))
+    # print(populate_table_with_random_values(table, 5000, 10000, ncol=5))
 
 
+print([None] * 5)

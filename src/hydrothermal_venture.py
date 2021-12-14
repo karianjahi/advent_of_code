@@ -98,6 +98,9 @@ class HydrothermalVenture:
         print("")
         print("")
         for index, item in enumerate(alist):
+            print("")
+            print(f'Dismantling and populating coordinates mapping for {item} at index {index}/{len(alist)}')
+            print("")
             values = item.split("->")
             values = [[int(k) for k in j.split(",")] for j in [i.strip() for i in values]]
             x1 = values[0][0]
@@ -147,8 +150,8 @@ class HydrothermalVenture:
 
 
 if __name__ == "__main__":
-    # data_file = "../data/data5_data.csv"
-    data_file = "../data/data5_example_data.csv"
+    data_file = "../data/data5_data.csv"
+    #data_file = "../data/data5_example_data.csv"
     obj = HydrothermalVenture(data_file)
     mutilated_table = obj.create_table_but_consider_diagonals_too()
     print(identify_frequency_of_overlaps(mutilated_table))
