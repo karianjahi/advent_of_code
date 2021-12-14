@@ -187,6 +187,10 @@ def populate_table_with_random_values(table, start, end, ncol=5):
 if __name__ == "__main__":
     table = pd.read_csv("../data/table2list_tester_table.csv")
     # print(populate_table_with_random_values(table, 5000, 10000, ncol=5))
-
-
-print([None] * 5)
+    import sys
+    #ls = [None] * 10000000000
+    #print(f'{sys.getsizeof(ls)/1000000000} gigs')
+    #print(f'{np.format_float_positional(sys.getsizeof(ls) / 1000000000, trim="-")} gigs')
+    gh = np.array([3.5, 1.5, 9.1])
+    for g in gh:
+        print(g)
